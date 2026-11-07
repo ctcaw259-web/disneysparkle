@@ -1,0 +1,1 @@
+{"name": "Disney Sparkle", "short_name": "Sparkle", "start_url": "./", "display": "standalone", "background_color": "#101321", "theme_color": "#101321", "icons": [{"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}]}

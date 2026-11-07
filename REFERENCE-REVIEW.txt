@@ -1,0 +1,25 @@
+REFERENCE CODE REVIEW — REVISION 5
+Reviewed the current supplied files:
+- index(1).html (1,986 lines)
+- brandi_s_sparkle_station_disney_wait_times_vip_virtual_resort_tv (2).html (2,109 lines)
+
+ADAPTED
+Both files share much of the same Web Audio engine: triangle/sine piano harmonics, a bass voice, swung scheduling, major/minor progressions, ten style presets, and public-domain melody grids. Adapted the style presets, major/minor accompaniment, seasonal carol phrases and playable songbook into our existing piano UI. Kept short transcriptions explicitly labeled melody sketches. The sources do not contain sampled acoustic piano audio.
+
+Borrowed the quick resort-picker workflow, but built it with our existing real photographs, typography, palette and full resort catalog. Added text search, destination filtering, favorites and current-resort highlighting.
+
+Retained our direct audio uploads and recorded request player. The newer index file also has local music storage, but replacing our existing IndexedDB database would not improve the workflow and would strand saved assets.
+
+NOT IMPORTED
+- Random/sample wait readings as a network fallback. Our app keeps unavailable/stale readings explicit.
+- Fabricated live-viewer counts and seeded request bubbles presented as visitors.
+- The fallback that calls an unrelated original riff a requested copyrighted song.
+- Broad CORS proxy fallback chains.
+- Regex parsing of another application's source JavaScript to discover media metadata.
+- Competing page layouts, illustrated resort stand-ins, emoji-heavy navigation or replacement landing-page styles.
+
+RELIABILITY IMPROVEMENTS
+The piano scheduler skips overdue scheduling after a background-tab delay, avoiding a burst of queued notes. Switching to recorded requests stops the generated piano. Songbook sketches pause recorded playback. Navigating away stops the piano through the existing navigation lifecycle.
+
+VERIFICATION
+Syntax and isolated regression checks passed, including seasonal/style selection, songbook pitch scheduling, resort filtering/favorite sorting, additional character renderers and prior data/media checks. These tests do not assess subjective audio quality or prove visual/browser/TV behavior. No speaker audition or live deployment verification was performed.

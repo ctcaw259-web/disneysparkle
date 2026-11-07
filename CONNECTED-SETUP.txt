@@ -1,0 +1,88 @@
+DISNEY SPARKLE — REVISION 10 CONNECTED FEATURES
+
+Upload this entire ZIP to the existing disneysparkle Cloudflare Pages project.
+Keep _worker.js and index.html at the deployment root. No build command.
+
+ONE-TIME CLOUDFLARE SETUP
+1. Open Workers & Pages > disneysparkle > Settings > Bindings.
+2. Add a Workers AI binding. Variable name: AI.
+3. Under Variables and Secrets, add encrypted secrets for Production:
+   SPARKLE_ACCESS_KEY: a long random station code (at least 32 random characters).
+   FISH_API_KEY: your Fish Audio API key.
+   Never put these in index.html, JavaScript files, source control or this chat.
+4. Redeploy after changing bindings/secrets.
+5. In the app, open Connected features. The relevant configuration checks should
+   report configured. Enter your station code, NOT the Fish key. The code is
+   held only in browser memory; re-enter after a reload.
+
+OPTIONAL VARIABLES
+AI_MODEL defaults to @cf/meta/llama-3.1-8b-instruct.
+FISH_MODEL defaults to s2-pro. Change only to a model available to your Fish
+account and supporting the selected public voice. Voices can become unavailable.
+A configured key does not guarantee credits, model access or correct pronunciation.
+
+USING ASK MICKEY
+Select Conversational AI and a destination, then ask your question. Questions
+and up to eight recent messages go to Cloudflare AI. Select the desired park
+in Park wait times before asking about queues. The server fetches Queue-Times
+readings rather than trusting browser-supplied waits. Weather coordinates follow
+the chosen destination. Ticket links follow that destination. No live checkout
+prices or future crowd forecast service is integrated. AI is instructed not to
+invent these; independently verify travel decisions against linked sources.
+Save last answer to trip reminders stores a draft locally, not a reservation.
+Conversation stays in memory and is lost on reload. It does not sync to a TV.
+
+USING CHARACTER SPEECH
+Family Welcome > A welcome just for your family > choose a voice > Generate.
+The family name goes to Fish Audio. Generation may use paid credits. Press Play
+when ready. Audio is stored in this browser's IndexedDB and reused on replay.
+Changing family name or voice requires a new generation. The pre-bundled Mickey
+sample remains available without a key. Browser narration is still a separate
+option. Generated character speech is AI audio, not an official Disney recording.
+
+SECURITY / OPERATIONS
+Existing GET data routes remain allowlisted. /api/chat, /api/welcome and
+/api/family/state accept POST, require same-origin requests and the station code,
+and reject
+JSON bodies over 16 KB. Responses are not publicly cached. The voice endpoint
+allows seven fixed model IDs and a fixed greeting template, not arbitrary text.
+The code protects connected usage only; it is not a user account/login system.
+Keep it private and rotate if disclosed. Set provider billing alerts/budgets;
+there is no durable per-user quota system in this build.
+
+VALIDATION
+Syntax and mocked integration checks passed, including missing credentials,
+wrong code, cross-origin denial, body limits, stale/zero waits, invalid voices
+and failed provider calls. Local browser verified chat and voice controls.
+No live AI inference or personalized Fish generation was executed: these need
+your configured Cloudflare binding and Fish account. Revision 10 is not deployed
+until you upload it. TV playback remains device-dependent.
+
+REFERENCES
+https://developers.cloudflare.com/pages/functions/bindings/#workers-ai
+https://developers.cloudflare.com/workers-ai/models/llama-3.1-8b-instruct/
+https://docs.fish.audio/api-reference/endpoint/openapi-v1/text-to-speech
+
+FAMILY SYNC — ONE-TIME D1 SETUP
+1. In Cloudflare, create a D1 database, for example disney-sparkle-family.
+2. Run the two CREATE TABLE statements in family-schema.sql in its SQL console.
+   They are idempotent; they do not delete existing family data.
+3. In the disneysparkle Pages project, add a D1 binding named FAMILY_DB pointing
+   to this database, for Production (and separately Preview if desired).
+4. Set the SPARKLE_ACCESS_KEY secret if not already configured. Redeploy.
+5. Open Connected features, enter the station code, then Family sync.
+   Save the first device; Load on subsequent devices before saving changes.
+AI and Fish keys are not needed for family sync. D1 storage/request charges may
+apply. The server allows only exact state/photo routes, validates fields, checks
+same-origin mutations and rejects stale revisions with HTTP 409. Photos use
+GET/PUT/DELETE with the station code, JPEG signature checks, a 1 MB limit and a
+20-photo cap. Cloud copies can be removed under Manage shared photos.
+Private JSON/photo responses are no-store. Do not share the station code publicly.
+No secure individual login, automatic Google album import or
+recording synchronization is claimed. Keep a local copy of favorite photos.
+
+https://developers.cloudflare.com/pages/functions/bindings/#d1-databases
+https://developers.google.com/photos/support/updates
+
+POCKET ALERTS
+See PUSH-SETUP.txt for the separate scheduled Worker, VAPID keys and device enrollment. Run the updated family-schema.sql for the additional push tables.

@@ -1,0 +1,88 @@
+DISNEY SPARKLE — REVISION 10 POCKET ALERTS
+
+The Pages ZIP includes the UI, subscription API, service worker and D1 schema.
+Closed-app notifications additionally need a SEPARATE scheduled Cloudflare Worker.
+Uploading this ZIP alone does not activate background alerts. Your site is not
+being automatically deployed or connected to paid services by this package.
+
+1. DATABASE
+Run family-schema.sql in the existing family D1 database console. CREATE TABLE
+IF NOT EXISTS preserves the Revision 9 tables. Both Pages and the new scheduled
+Worker must bind this SAME database as FAMILY_DB.
+
+2. KEYS
+Unzip push-service.zip somewhere outside your deployed site. With Node installed,
+run: node generate-keys.mjs
+It prints a new VAPID public/private pair. Keep this pair stable for existing
+subscriptions. Do not paste the private key into chat or browser-side files.
+Use Cloudflare's encrypted secrets entry for the private key.
+
+3. PAGES SETTINGS
+Keep SPARKLE_ACCESS_KEY (your private station code) and FAMILY_DB.
+Add VAPID_PUBLIC_KEY with the generated PUBLIC value. Redeploy the Pages ZIP.
+The public key is safe to send to the browser. Never put the private key in Pages
+assets or in the downloadable ZIP. No Fish/AI key is needed for ride alerts.
+
+4. SCHEDULED WORKER — DASHBOARD OPTION
+Create a separate Worker named disney-sparkle-push. In its code editor, replace
+its code with push-worker.bundle.js from push-service.zip. This is an already
+bundled ES module with its Web Push dependency included.
+Add the FAMILY_DB D1 binding to the same database used by Pages.
+Add VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY and VAPID_SUBJECT to this Worker.
+Store VAPID_PRIVATE_KEY as an encrypted secret.
+VAPID_SUBJECT must be a real contact URI, such as mailto:your-address@example.com.
+Save/deploy the Worker. Add a Cron Trigger: */5 * * * * (every five minutes).
+Its public HTTP endpoint intentionally returns 404; it is scheduled-only.
+You do not need to add a route to your Pages domain.
+
+CLI alternative: use the included wrangler.jsonc after replacing the D1 ID.
+Run npm ci in the extracted push-service folder, then use your authenticated
+Wrangler CLI to set the variables/secrets and deploy. The config has the cron.
+Do not upload a file containing actual secret values into Pages.
+
+5. ENROLL EACH PHONE
+Open the HTTPS app and enter the station code in Connected features.
+On iPhone/iPad, first Share > Add to Home Screen; open the installed app.
+In Park wait times, select a park, star rides and set their wait thresholds.
+Open Pocket ride alerts, select 1/7/30/90 days, then Enable / update this park's
+pocket alerts. Allow notifications when your device asks.
+Repeat for other parks to add their rides to THIS phone's watchlist.
+Changing local favorites/thresholds later requires pressing Enable/update again.
+Other family members' settings do not silently enroll or alter this phone.
+Check service & device status to confirm a recent scheduled check (allow time
+for the Cron Trigger configuration to propagate). Then verify on a real phone.
+
+BEHAVIOR / OPERATIONS
+- Every ~5 minutes, fetches only fixed Queue-Times or ThemeParks.wiki live routes.
+- Requires an operating ride and a nonnegative numeric wait timestamped within
+  15 minutes. Stale/unavailable/closed rides do not trigger alerts.
+- First below-threshold reading can alert. Persistent low readings do not repeat.
+  A rise to/above the threshold rearms it; a 30-minute cooldown limits repeats.
+- One encrypted notification groups up to three ride names, noting extra matches.
+  Messages expire after five minutes at the push service; waits may change sooner.
+- Unsuccessful delivery stays retryable. HTTP 404/410 removes dead endpoints.
+- At most 30 watches/device, 10 devices and 12 distinct parks per station.
+- Subscriptions automatically expire after the selected monitoring duration.
+- Turn off this device's pocket alerts removes its server subscription. Local
+  in-app thresholds remain. Disabling site notifications in OS settings also
+  blocks notifications. If a device is lost, remove its row from push_devices
+  in your D1 console; never publish subscription endpoints or encryption keys.
+- A D1 lease prevents overlapping runs; status shows the last run and failures.
+  Use Cloudflare logs and billing controls for ongoing operations.
+- Web Push transport is encrypted with aes128gcm and VAPID authentication.
+  Only known Google/Mozilla/Apple/Windows push-service HTTPS endpoints are allowed.
+  Subscription API requires station code, exact routes and same-origin POST.
+- Push is best-effort. Focus modes, permissions, OS limits, network outages and
+  provider delays affect delivery. No exact five-minute phone arrival guarantee.
+
+VERIFICATION ALREADY PERFORMED
+Local tests exercised subscription validation, actual encrypted payload creation
+and decryption with a simulated browser key, SQL storage, duplicate suppression,
+zero waits, stale suppression, rearming, failed delivery retry and expired
+endpoint cleanup. External push delivery and Cloudflare Cron execution have NOT
+been tested on your account/phone. No real keys were generated into this ZIP.
+
+REFERENCES
+https://developers.cloudflare.com/workers/configuration/cron-triggers/
+https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/
+https://www.npmjs.com/package/@block65/webcrypto-web-push

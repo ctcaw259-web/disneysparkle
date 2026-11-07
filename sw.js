@@ -1,0 +1,12 @@
+const VERSION='sparkle-v10',SHELL=VERSION+'-shell',DATA=VERSION+'-data';
+const FILES=['/','/index.html','/sparkle.js?v=10','/style.css?v=10','/manifest.json','/icon.svg','/assets/mickey_classic.jpg','/assets/trio.jpg','/assets/stitch.jpg','/assets/belle.jpg','/assets/tiana.jpg','/assets/mickey-sample.mp3'];
+self.addEventListener('install',e=>{e.waitUntil(caches.open(SHELL).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()))});
+self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('sparkle-v')&&![SHELL,DATA].includes(k)).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',e=>{const req=e.request,u=new URL(req.url);if(req.method!=='GET'||u.origin!==self.location.origin||req.headers.has('X-Sparkle-Key'))return;
+ const publicData=/^\/api\/(queue\/parks(?:\/\d+)?|themeparks\/(?:destinations|entity\/[\w-]+\/(?:live|schedule))|weather\/orlando)$/.test(u.pathname);
+ if(u.pathname.startsWith('/api/')&&!publicData)return;
+ const shell=FILES.some(f=>new URL(f,self.location.origin).href===u.href)||req.mode==='navigate';if(!shell&&!publicData)return;
+ e.respondWith((async()=>{const cache=await caches.open(publicData?DATA:SHELL),key=req.mode==='navigate'?'/index.html':req;try{const r=await fetch(req,{signal:AbortSignal.timeout(4000)});if(!r.ok)throw Error();await cache.put(key,r.clone());return r}catch{const saved=await cache.match(key);if(saved){if(publicData){const headers=new Headers(saved.headers);headers.set('X-Sparkle-Offline','1');return new Response(await saved.arrayBuffer(),{status:200,headers})}return saved}return new Response(publicData?'Pending data is unavailable offline.':'Open Disney Sparkle online once to save the app for offline use.',{status:503})}})())});
+
+self.addEventListener('push',event=>{let msg={title:'Disney Sparkle',body:'Open your ride dashboard for the latest updates.',url:'/#home'};try{Object.assign(msg,event.data.json())}catch{}event.waitUntil(self.registration.showNotification(msg.title,{body:msg.body,icon:'/icon.svg',tag:msg.tag||'sparkle-rides',data:{url:'/#home'}}))});
+self.addEventListener('notificationclick',event=>{event.notification.close();event.waitUntil((async()=>{const tabs=await self.clients.matchAll({type:'window',includeUncontrolled:true});const tab=tabs.find(c=>new URL(c.url).origin===self.location.origin);if(tab){await tab.navigate('/#home');await tab.focus()}else await self.clients.openWindow('/#home')})())});

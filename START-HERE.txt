@@ -1,0 +1,118 @@
+DISNEY SPARKLE — REVISION 10
+
+DEPLOY
+Upload this ZIP into your existing Cloudflare Pages project. index.html,
+_worker.js, sparkle.js and sw.js belong at the root. No build command is needed for Pages. Pocket alerts need a separate Worker.
+Existing local preferences and photos are preserved. Refresh after uploading.
+Your deployed website has NOT been changed by preparing this package.
+
+
+NEW IN REVISION 10
+Trip-day mode: Plan your trip or Countdown > trip-day settings. Save arrival,
+last day (inclusive), time zone and automatic mode. Home switches during those
+dates to today's published hours, next three fresh shows, starred waits and your
+dining notebook. Choose today's park on Home and save it for that date. The
+at-home welcome remains one click away. Dates follow your chosen trip time zone.
+The notebook now has structured dining date/time/name/location/status entries.
+Existing free-text dining notes also appear for the matching trip day.
+
+DVC tracker: on Countdown and Planner, save a snapshot per contract/Use Year.
+Enter REMAINING UNCOMMITTED current-year, banked and borrowed balances; do not
+enter annual allotment numbers unless those are also your remaining balances.
+Edit a snapshot when bookings or banking change your account. This is manual,
+not an official DVC integration. No points move and no automatic annual rollover.
+The banking deadline is the last day of the eighth Use-Year month. Expiration
+is the day before the next Use Year. Borrowing is performed when reserving and
+has no fixed annual deadline; an optional personal decision reminder is provided.
+Calendar export has 30- and 7-day advance reminders. Import the ICS yourself.
+Rules/eligibility/holding points should be verified in your official DVC account.
+
+Pocket alerts: see PUSH-SETUP.txt. The implementation is included, but the
+separate scheduled Worker, D1 schema, VAPID keys and device permission must be
+configured before closed-app alerts work. The included push-service.zip is a
+separate deployment kit, not another Pages entry point.
+
+FAMILY STATION TOOLS
+TV & ambient: arrow navigation with large gold focus rings. Enter activates
+buttons/check boxes; Escape closes a dialog or returns home. In text inputs,
+Left/Right moves the cursor and Up/Down moves focus. In native dropdowns,
+Up/Down chooses an option and Left/Right leaves the control. Embedded Spotify
+and YouTube players own their own keyboard handling; controls inside those
+cross-origin frames cannot be managed by this app. Test your TV remote.
+Ambient mode is opt-in: choose 2, 5 or 10 idle minutes, or Start now. It rotates
+local photos, countdown and fresh upcoming showtimes every 20 seconds. Any key
+or tap wakes it without activating the underlying button. It will not interrupt
+Terrace, Piano, Multiview or open dialogs. Showtimes are for the selected park.
+
+Family voices: enter a person's name, press Record, allow microphone access,
+then Stop & save (30-second maximum). Choose the person to play their greeting.
+Recordings remain in this browser. Download a greeting to transfer to another
+device through Family Welcome's audio upload. HTTPS and MediaRecorder support
+are required. This is separate from the existing AI character voice feature.
+
+Family sync: after the D1 setup in CONNECTED-SETUP.txt, enter the station code.
+Save the first device's settings. On another device, Load shared settings first.
+Shared fields: family name, resort, arrival, favorite rides, alert thresholds,
+trip notebook, booking choices and Google Photos shortcut. Station title,
+playback settings, recordings and conversations stay local. Automatic checks
+run once a minute this session; they pause if local shared fields have changed.
+Save conflicts reject stale writes instead of silently overwriting newer work.
+Photo upload/download is explicit: up to 20 resized JPEGs, 1600px, <1MB each.
+Manage shared photos removes cloud copies only; local copies remain. Trip-day settings, dining entries and DVC snapshots are also shared. One private
+family collection per deployment, not separate individual accounts.
+
+RIDE ALERTS & TRENDS
+Park wait times > Set wait alert. Saving an alert also favorites the ride.
+Only fresh readings from the selected park can trigger. Checks run while the
+app is open; use Pocket ride alerts for the separate background service. Optional browser notifications
+require permission. Trends collect up to six hours of actual readings on this
+device; they need multiple samples and are not a historical-data subscription.
+
+PLANNING WINDOWS
+Set your arrival in Family check-in, then open Plan your trip or Countdown.
+Choose hotel eligibility and DVC preferences. Dining, Lightning Lane and DVC
+windows use Eastern time. Download .ics and import it into your calendar for
+15-minute advance reminders. Online check-in is an editable personal reminder,
+not a claim that check-in opens 60 days out. Eligibility and booking availability
+must be verified with Disney. Other-resort DVC rules depend on your membership.
+
+GOOGLE PHOTOS
+Save a shared-album link to open the album. For the ambient slideshow, download
+selected photos and bulk-add them in Your memories. Automatic shared-album
+import and Google Picker OAuth are not implemented; a link does not grant API
+access. Google Photos is not cached offline.
+
+OFFLINE & HEALTH
+After one successful online load, the service worker saves the app shell,
+bundled character assets and last successful public data responses. Last-known
+waits retain provider timestamps and become stale; an offline feed is never
+invented or converted to a park closure. Health indicators separately show
+waits, showtimes and weather as live/stale/unavailable. Weather becomes available
+after the built-in weather lookup. Video, Spotify, AI and cloud sync need a
+connection; private family/API responses are never service-worker cached.
+
+EXISTING FEATURES RETAINED
+Character portraits, hidden Mickey hunt, tutorial, family personalization,
+resort images/music choices, real-video Terrace previews/full shows, Multiview,
+piano recording requests, trip notebook, seasonal decorations and TV mode.
+YouTube and Spotify playback depends on provider/browser/device restrictions.
+TV mode is a full-screen layout, not casting. Use Chrome Cast tab or AirPlay
+screen mirroring. No physical TV receiver was tested for this revision.
+
+CODE / VALIDATION
+index.html loads ONE browser bundle: sparkle.js. Screen implementations use
+explicit named composition stages and one public entry point, replacing runtime
+function-overwrite chains. development-source.zip contains reproducible sources,
+build script and tests; it is not loaded by the app. To rebuild, unpack it and
+run node build.cjs from its directory (Node 20+; SQL tests use Node 22+ SQLite).
+Regression checks cover screens, escaping, defaults, calendar edge dates,
+fresh/stale/zero-minute waits, alert deduplication, Worker route restrictions,
+AI/voice error handling and family SQL authentication/conflicts/photo limits.
+Browser checked new controls, keyboard focus and ambient wake behavior.
+Real microphone capture, D1 deployment, live push delivery, live AI/voice generation and physical TV
+playback still need verification on your configured devices/accounts.
+
+DVC SOURCES (checked November 6, 2026)
+https://disneyvacationclub.disney.go.com/media/dvc/en/points/DVC_Banking_V3_051915.pdf
+https://disneyvacationclub.disney.go.com/media/dvc/en/points/Banking_rules_final.pdf
+https://disneyvacationclub.disney.go.com/media/dvc/en/points/Borrowing_rules_final.pdf

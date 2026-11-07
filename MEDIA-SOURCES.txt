@@ -1,0 +1,54 @@
+DISNEY SPARKLE — MEDIA REFERENCES
+
+Resort directory photos: exact remote image URLs are in resort-assets.js and experience.js.
+https://disneyworld.disney.go.com/resorts/
+https://disneyvacationclub.disney.go.com/destinations/list/
+
+Mickey & Minnie classic photograph:
+https://disneyexperiences.com/disneyworld/economic-impact/
+Holiday Mickey & Minnie photograph:
+https://beourguestvacations.com/mickeys-very-merry-christmas-party-2024/
+Holiday safari Mickey & Minnie photograph:
+https://disneyparksblog.com/wdw/holidays-at-disney-world-2025-christmas-lights-festive-fun-and-more/
+Stitch at Aulani photograph:
+https://rurubu.jp/andmore/article/22228
+Tiana at Port Orleans photograph:
+https://www.hemphillyeverafter.com/blog/disneys-secret-mardi-gras-party
+
+Location-specific fireworks recordings:
+https://www.youtube.com/watch?v=E4k4ByuhTB4
+https://www.youtube.com/watch?v=F4JN99sigRs
+Existing supplied show links remain in upgrade.js.
+
+Recorded piano requests:
+My Way — Piano Mario
+https://www.youtube.com/watch?v=MDFW_aY4nlw
+Happy Birthday — Fishel Pustilnik
+https://www.youtube.com/watch?v=FFJ0DdLuui4
+
+Spotify resort defaults:
+Full catalog-returned names and URLs are retained in resort-music.js. They are community playlists, not verified complete official Disney recordings.
+Port Orleans - French Quarter/Riverside | WDW Area Music — Dominic Sam
+https://open.spotify.com/playlist/2jHjoxL1G644PvdZ1k3Mw5
+Disney's Polynesian Resort Christmas — pugglebudgie
+https://open.spotify.com/playlist/7sfDkEV1C5kJOZRUOg9idB
+
+Player documentation:
+https://developers.google.com/youtube/iframe_api_reference
+https://developer.spotify.com/documentation/embeds/tutorials/creating-an-embed
+
+Park data:
+https://queue-times.com/pages/api
+https://api.themeparks.wiki/docs/v1
+
+Independent personal fan project. External image/video/audio availability can change. No full recordings are downloaded or rehosted in this ZIP.
+
+Revision 5 character photos:
+Donald, Goofy & Pluto — Disney character performer feature
+https://sites.disney.com/lifeatdisney/disney-programs/2023/10/06/disney-college-program-character-performer-audition-opportunities/
+Belle — Shanghai Disney Resort Storybook Court
+https://www.shanghaidisneyresort.com/entertainment/theme-park/characters-disney-princesses-storybook-court/
+
+Piano presets and melody grids adapted from the user-provided index(1).html and brandi_s_sparkle_station_disney_wait_times_vip_virtual_resort_tv (2).html. These are browser-generated melody sketches, not sampled piano recordings.
+
+Revision 7: Bundled assets/mickey-sample.mp3 retrieved from the public default sample on https://fish.audio/m/8e21c96120f94f08995a9bd04380a448/ . Fixed model preview, not a family-specific generation. Character images previously linked externally are bundled in assets to avoid hotlink failures. Open-Meteo weather attribution is shown in each weather answer.
